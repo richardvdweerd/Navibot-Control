@@ -1,3 +1,9 @@
+/********************************************************* 
+ *  
+ *  Created by Richard van der Weerd
+ *  
+ *********************************************************/
+
 #ifndef MYSERIALDEFS_H
 #define MYSERIALDEFS_H
  

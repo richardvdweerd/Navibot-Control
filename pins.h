@@ -1,4 +1,8 @@
-// Created by Richard van der Weerd
+/********************************************************* 
+ *  
+ *  Created by Richard van der Weerd
+ *  
+ *********************************************************/
 
 #ifndef PINS_H
 #define PINS_H
