@@ -100,7 +100,7 @@ void mqttconnect() {
   while (!client.connected()) {
     SERIAL_PRINTLN("MQTT connecting ...");
     /* client ID */
-    String clientId = "IRClient";
+    String clientId = NAVIBOT_NAME;
     /* connect now */
     if (client.connect(clientId.c_str())) {
        SERIAL_PRINTLN("connected");
@@ -177,6 +177,7 @@ void setupOTA() {
  *******************************************************************************/
 void setupWifi(){
   // attempt to connect to Wifi network:
+  WiFi.hostname(NAVIBOT_NAME);
   WiFi.begin((char*)ssid, (char*)password);
   while ( WiFi.status() != WL_CONNECTED ) {
     digitalWrite(5, HIGH);
