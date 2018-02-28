@@ -14,16 +14,22 @@
  *  
  */
 
-
 //#define SERIAL_DEBUG     // comment out in mySerfialDefs.h to remove all print statements
 
 #include <ESP8266WiFi.h>
 #include <ArduinoOTA.h>
 #include "PubSubClient.h"           // mqtt client
 #include "mySerialDefs.h"
-#include <Credentials.h>
+#include <Credentials.h>            // comment out if not exist 
 #include "pins.h"
 
+/* You can create your own CREDENTIALS_H like:
+ *  #define WIFI_SSID   "your ssid"
+ *  #define WIFI_PASS   "your password"
+ *  #define MQTT_SERVER "mqtt server ip"
+ *  #define MQTT_PORT   yourport      // no quotes (") !
+ */
+ 
 #ifdef CREDENTIALS_H
 const char* ssid = WIFI_SSID;
 const char* password = WIFI_PASS;
@@ -33,23 +39,28 @@ const int mqtt_port = MQTT_PORT;
 const char* ssid = "your ssid";
 const char* password = "your password";
 const char* mqtt_server = "mqtt server ip";
-const int mqtt_port = 1883;
+const int mqtt_port = 1883;           // 1883 is default MQTT port
 #endif
 
 /* create an instance of PubSubClient client */
 WiFiClient espClient;
 PubSubClient client(espClient);
 
-/* topics */
+/* MQTT topics */
 #define TOPIC_OUT    "domoticz/out"
 #define TOPIC_IN     "domoticz/in"
+
 char msg[MQTT_MAX_PACKET_SIZE];
 
 #define NavibotStartStop() SwitchNavibot(PIN_STARTSTOP)
 #define NavibotRecharge()  SwitchNavibot(PIN_RECHARGE)
 
-#define TIMER 20   // flash every TIMER loops
-int counter = 0;
+#define NAVIBOT_NAME "ESP8266_Navibot"    // OTA name
+#define TIMER 20                          // flash once every TIMER loops
+int counter = 0;                          // initialize counter to zero
+
+#define DOMOTICZ_SWITCH_START_STOP  "\"idx\" : 806,"
+#define DOMOTICZ_SWITCH_RECHARGE    "\"idx\" : 834,"
 
 /*******************************************************************************
  * 
@@ -57,7 +68,7 @@ int counter = 0;
  * 
  *******************************************************************************/
 
-
+// not used yet. will be used for movement feedback to mqtt/domoticz
 void publishMessage(char* topic, int device, int state) {
   char myMsg[50];
   if (device) {
@@ -74,11 +85,11 @@ void receivedCallback(char* topic, byte* payload, unsigned int length) {
   SERIAL_PRINT("payload: ");
   SERIAL_PRINTLN((char*)  payload);
 
-  if (strstr((char*)payload, "\"idx\" : 806,") && strstr((char*)payload, "\"nvalue\" : 1,")) {
+  if (strstr((char*)payload, DOMOTICZ_SWITCH_START_STOP) && strstr((char*)payload, "\"nvalue\" : 1,")) {
     SERIAL_PRINTLN("Navibot Start/Stop!!!!!");
     NavibotStartStop();
   }
-  if (strstr((char*)payload, "\"idx\" : 834,") && strstr((char*)payload, "\"nvalue\" : 1,")) {
+  if (strstr((char*)payload, DOMOTICZ_SWITCH_RECHARGE) && strstr((char*)payload, "\"nvalue\" : 1,")) {
     SERIAL_PRINTLN("Navibot Recharge!!!!!");
     NavibotRecharge();
   }
@@ -146,14 +157,16 @@ void setupOTA() {
       SERIAL_PRINTF("Progress: %u%%\r", (progress / (total / 100)));
     });
     ArduinoOTA.onError([](ota_error_t error) {
+#ifdef SERIAL_DEBUG
       SERIAL_PRINTF("Error[%u]: ", error);
       if (error == OTA_AUTH_ERROR) SERIAL_PRINTLN("Auth Failed");
       else if (error == OTA_BEGIN_ERROR) SERIAL_PRINTLN("Begin Failed");
       else if (error == OTA_CONNECT_ERROR) SERIAL_PRINTLN("Connect Failed");
       else if (error == OTA_RECEIVE_ERROR) SERIAL_PRINTLN("Receive Failed");
       else if (error == OTA_END_ERROR) SERIAL_PRINTLN("End Failed");
+#endif
     });
-  ArduinoOTA.setHostname("ESP8266_Navibot");
+  ArduinoOTA.setHostname(NAVIBOT_NAME);
   ArduinoOTA.begin();
 }
 
@@ -212,11 +225,11 @@ void setup() {
  *******************************************************************************/
 
 void SwitchNavibot(int port) {
-  digitalWrite(PIN_STATUSLED, HIGH);   // switch on control led
-  digitalWrite(port, HIGH);
-  delay(1000);
-  digitalWrite(port, LOW);
-  digitalWrite(PIN_STATUSLED, LOW);    // switch off control led
+  digitalWrite(PIN_STATUSLED, HIGH);    // switch on control led
+  digitalWrite(port, HIGH);             // 'press' the switch
+  delay(1500);                          // hold it for 1500 ms; sometimes 1000 seems to be to short 
+  digitalWrite(port, LOW);              // release the switch
+  digitalWrite(PIN_STATUSLED, LOW);     // switch off control led
 }
 
 /*******************************************************************************

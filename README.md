@@ -23,6 +23,7 @@ after that it issues a recharge command via another virtual switch. Both command
 detected by the Navibot and the two switches are shorted one after the other. The Navibot returns
 to it's station.
 
+One other convienent feature is that once the sketch is uploaded, it can be updated via OTA (Over The Air).
 
 ### ToDo
 - [ ] Adding schematics here
