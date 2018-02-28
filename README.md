@@ -26,7 +26,7 @@ to it's station.
 One other convienent feature is that once the sketch is uploaded, it can be updated via OTA (Over The Air).
 
 ### ToDo
-- [ ] Adding schematics here
+- [x] Adding schematics here
 - [ ] Upgrade sketch and hardware to detect movement and 'report' back to Domoticz
 
 
