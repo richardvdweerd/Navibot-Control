@@ -29,7 +29,8 @@ One other convienent feature is that once the sketch is uploaded, it can be upda
 ![Navibot schematics](/images/Navibot-Schematics.png)
 
 ### ToDo
-- [x] Adding schematics here
+- [x] Add schematics here
+- [ ] Add photos of the project
 - [ ] Upgrade sketch and hardware to detect movement and 'report' back to Domoticz
 
 
