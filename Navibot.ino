@@ -1,6 +1,6 @@
 /*!
 
- Samsung Navibot
+ Samsung Navibot Control
 
  *  \brief     Samsung Navibot ESP8266 MQTT Domoticz
  *  \details   Little app control your Samsung Navibot via MQTT and Domoticz
@@ -11,8 +11,6 @@
  *  \bug       No bugs discovered yet
  *  \warning   No warnings yet
  *  \copyright MIT License.
- *  
- *  
  *  
  */
 
@@ -207,6 +205,12 @@ void setup() {
   setupMqtt();
 }
 
+/*******************************************************************************
+ * 
+ * SwitchNavibot
+ * 
+ *******************************************************************************/
+
 void SwitchNavibot(int port) {
   digitalWrite(PIN_STATUSLED, HIGH);   // switch on control led
   digitalWrite(port, HIGH);
@@ -217,14 +221,26 @@ void SwitchNavibot(int port) {
 
 /*******************************************************************************
  * 
+ * flashStatusLED
+ * 
+ *******************************************************************************/
+
+void flashStatusLED() {
+    digitalWrite( PIN_STATUSLED, HIGH);
+    delay(50);
+    digitalWrite(PIN_STATUSLED, LOW);
+    counter = 0;
+}
+
+/*******************************************************************************
+ * 
  * LOOP
  * 
  *******************************************************************************/
 
 void loop() {
-  // put your main code here, to run repeatedly:
 
-    /* listen for OTA requests */
+  /* listen for OTA requests */
   ArduinoOTA.handle();
 
   /* if client was disconnected then try to reconnect again */
@@ -235,18 +251,11 @@ void loop() {
   subscribed topic-process-invoke receivedCallback */
   client.loop();
 
-  // size of code:
-//  uint16_t msgsize = sizeof(navibotStartStop);
-//  Serial.println(msgsize);
-
   // wait a while
   delay(250);
 
-  if (counter++ >= TIMER) {
-    digitalWrite( PIN_STATUSLED, HIGH);
-    delay(50);
-    digitalWrite(PIN_STATUSLED, LOW);
-    counter = 0;
-  }
+  /* flash status LED once in TIMER loops */
+  if (counter++ >= TIMER) 
+    flashStatusLED();
 }
 
