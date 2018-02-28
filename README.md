@@ -14,7 +14,7 @@ controlled by the ESP8266.
 In this version only two switches are controlled: start/stop and recharge. That seems to be
 enough to take basic control over the Navibot.
 
-### Working
+### How it works
 Domoticz senses our absense from the house and issues a start/stop command via a virtual switch. The
 Navibot reads the MQTT command and shorts the tactile switch through the transistor. The Navibot
 starts. 
