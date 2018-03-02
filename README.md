@@ -30,7 +30,8 @@ One other convienent feature is that once the sketch is uploaded, it can be upda
 
 ### ToDo
 - [x] Add schematics here
-- [ ] Add photos of the project
+- [x] Add photos of the project
+- [ ] Add How to
 - [ ] Upgrade sketch and hardware to detect movement and 'report' back to Domoticz
 
 
