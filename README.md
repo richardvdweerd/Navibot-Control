@@ -28,10 +28,13 @@ One other convienent feature is that once the sketch is uploaded, it can be upda
 ### Schematics
 ![Navibot schematics](/images/Navibot-Schematics.png)
 
+### How to
+See the wiki-pages of this repository: (https://github.com/richardvdweerd/Navibot-Control/wiki)
+
 ### ToDo
 - [x] Add schematics here
 - [x] Add photos of the project
-- [ ] Add How to
+- [x] Add How to
 - [ ] Upgrade sketch and hardware to detect movement and 'report' back to Domoticz
 
 
